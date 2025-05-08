@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Manage Users</title>
+  <link rel="stylesheet" type="text/css" href="/css/admin/manageUsers.css">
+</head>
+<body>
+  <%- include('../partials/header') %>
+  <div class="admin-container">
+    <div class="admin-links">
+      <a href="/admin/products">Manage Products</a>
+      <a href="/admin/stock-management">Manage Stock</a>
+      <a href="/admin/users">Manage Users</a>
+      <a href="/admin/orders">Manage Orders</a>
+      <a href="/admin/analytics">View Analytics</a>
+      <a href="/admin/coupons">Manage Coupons</a>
+    </div>
+    <h2>Manage Users</h2>
+    <h3>Existing Users</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% users.forEach(user => { %>
+          <tr>
+            <td><%= user.username %></td>
+            <td><%= user.email %></td>
+            <td><%= user.role %></td>
+            <td>
+              <form action="/admin/users/edit/<%= user._id %>" method="POST">
+                <select name="role" required>
+                  <option value="user">User</option>
+                  <option value="admin">Admin</option>
+                </select>
+                <button type="submit" class="btn">Update</button>
+              </form>
+              <form action="/admin/users/delete/<%= user._id %>" method="POST">
+                <button type="submit" class="btn">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <%- include('../partials/footer') %>
+</body>
+</html>

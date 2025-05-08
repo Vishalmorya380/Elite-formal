@@ -1,0 +1,228 @@
+<aside class="filter-sidebar">
+  <h2>Filters</h2>
+  <form action="/<%= routeName === 'search' ? 'search' : 'categories/' + routeName %>" method="GET" id="filterForm" onsubmit="applyFilters(event)">
+    <!-- Hidden input for search query if on search route -->
+    <% if (routeName === 'search') { %>
+      <input type="hidden" name="query" value="<%= searchQuery %>">
+    <% } %>
+
+    <!-- Category Filter -->
+    <div class="filter-section">
+      <label for="category">Category:</label>
+      <select name="category" id="category" onchange="updateSizes()">
+        <% allCategories.forEach(cat => { %>
+          <option value="<%= cat.route %>" data-type="<%= cat.type || '' %>" <%= routeName === cat.route ? 'selected' : '' %>><%= cat.name %></option>
+        <% }) %>
+      </select>
+    </div>
+
+    <!-- Price Range Filter -->
+    <div class="filter-section">
+      <label>Price Range:</label>
+      <div class="price-range">
+        <input type="number" name="minPrice" id="minPrice" placeholder="Min" value="<%= currentFilters.minPrice || '' %>" onchange="applyFilters(event)">
+        <span>to</span>
+        <input type="number" name="maxPrice" id="maxPrice" placeholder="Max" value="<%= currentFilters.maxPrice || '' %>" onchange="applyFilters(event)">
+      </div>
+    </div>
+
+    <!-- Size Filter -->
+    <div class="filter-section">
+      <label for="size">Size:</label>
+      <select name="size" id="size" onchange="applyFilters(event)">
+        <option value="">All</option>
+        <!-- Options will be populated dynamically via JavaScript -->
+      </select>
+    </div>
+
+    <!-- Color Filter (Dropdown) -->
+    <div class="filter-section">
+      <label for="color">Color:</label>
+      <select name="color" id="color" onchange="applyFilters(event)">
+        <option value="">All</option>
+        <% colors.forEach(col => { %>
+          <option value="<%= col %>" <%= currentFilters.color === col ? 'selected' : '' %>><%= col %></option>
+        <% }) %>
+      </select>
+    </div>
+
+    <!-- Discount Filter -->
+    <div class="filter-section">
+      <label>Discount:</label>
+      <div class="checkbox-group">
+        <label>
+          <input type="checkbox" name="discount" value="yes" <%= currentFilters.discount === 'yes' ? 'checked' : '' %> onchange="applyFilters(event)">
+          Show Discounted Items
+        </label>
+      </div>
+    </div>
+
+    <!-- Stock Availability Filter -->
+    <div class="filter-section">
+      <label>Stock Availability:</label>
+      <div class="radio-group">
+        <label>
+          <input type="radio" name="stock" value="in" <%= currentFilters.stock === 'in' ? 'checked' : '' %> onchange="applyFilters(event)">
+          In Stock
+        </label>
+        <label>
+          <input type="radio" name="stock" value="out" <%= currentFilters.stock === 'out' ? 'checked' : '' %> onchange="applyFilters(event)">
+          Out of Stock
+        </label>
+      </div>
+    </div>
+
+    <div class="filter-actions">
+      <button type="submit">Apply Filter</button>
+      <button type="button" onclick="clearFilters()">Clear All</button>
+    </div>
+  </form>
+</aside>
+
+<script>
+  // Define upper and lower body categories (based on subcategories typically associated with them)
+  const upperBodyCategories = ['shirts', 'tshirts', 'jackets', 'kurti', 'dresses', 'suits'];
+  const lowerBodyPantsCategories = ['pants', 'plazo'];
+  const shoeCategories = ['shoes'];
+
+  function updateSizes() {
+    const categorySelect = document.getElementById('category');
+    const sizeSelect = document.getElementById('size');
+    const selectedOption = categorySelect.options[categorySelect.selectedIndex];
+    const selectedCategory = selectedOption.value.toLowerCase();
+    const categoryType = selectedOption.getAttribute('data-type')?.toLowerCase() || '';
+
+    // Log the selected category for debugging
+    console.log('Selected Category:', selectedCategory);
+    console.log('Category Type:', categoryType);
+
+    // Clear existing size options
+    sizeSelect.innerHTML = '<option value="">All</option>';
+
+    // Enable the size dropdown by default
+    sizeSelect.disabled = false;
+
+    // Extract the base category (e.g., "shirts" from "men-shirts")
+    const baseCategory = selectedCategory.includes('-') ? selectedCategory.split('-').pop() : selectedCategory;
+
+    console.log('Base Category:', baseCategory);
+
+    // Determine size options based on the base category
+    if (upperBodyCategories.includes(baseCategory)) {
+      // Upper body: S, M, L, XL, XXL
+      const alphaSizes = ['S', 'M', 'L', 'XL', 'XXL'];
+      alphaSizes.forEach(size => {
+        const option = document.createElement('option');
+        option.value = size;
+        option.text = size;
+        if (size === '<%= currentFilters.size %>') {
+          option.selected = true;
+        }
+        sizeSelect.appendChild(option);
+      });
+    } else if (lowerBodyPantsCategories.includes(baseCategory)) {
+      // Lower body (pants): 28 to 48, even numbers
+      for (let size = 28; size <= 48; size += 2) {
+        const option = document.createElement('option');
+        option.value = size.toString();
+        option.text = size.toString();
+        if (size.toString() === '<%= currentFilters.size %>') {
+          option.selected = true;
+        }
+        sizeSelect.appendChild(option);
+      }
+    } else if (shoeCategories.includes(baseCategory)) {
+      // Shoes: UK sizes based on category (Men, Women, Kids)
+      // Use categoryType or selectedCategory to determine men, women, or kids
+      if (selectedCategory.includes('men') || categoryType === 'men') {
+        // Men's shoes: UK 7 to UK 10
+        for (let size = 7; size <= 10; size++) {
+          const option = document.createElement('option');
+          option.value = `UK ${size}`;
+          option.text = `UK ${size}`;
+          if (`UK ${size}` === '<%= currentFilters.size %>') {
+            option.selected = true;
+          }
+          sizeSelect.appendChild(option);
+        }
+      } else if (selectedCategory.includes('women') || categoryType === 'women') {
+        // Women's shoes: UK 4 to UK 7
+        for (let size = 4; size <= 7; size++) {
+          const option = document.createElement('option');
+          option.value = `UK ${size}`;
+          option.text = `UK ${size}`;
+          if (`UK ${size}` === '<%= currentFilters.size %>') {
+            option.selected = true;
+          }
+          sizeSelect.appendChild(option);
+        }
+      } else if (selectedCategory.includes('kids') || categoryType === 'kids') {
+        // Kids' shoes: UK 1 to UK 5
+        for (let size = 1; size <= 5; size++) {
+          const option = document.createElement('option');
+          option.value = `UK ${size}`;
+          option.text = `UK ${size}`;
+          if (`UK ${size}` === '<%= currentFilters.size %>') {
+            option.selected = true;
+          }
+          sizeSelect.appendChild(option);
+        }
+      } else {
+        // Default shoe sizes if category isn't specific (e.g., generic 'shoes')
+        for (let size = 1; size <= 10; size++) {
+          const option = document.createElement('option');
+          option.value = `UK ${size}`;
+          option.text = `UK ${size}`;
+          if (`UK ${size}` === '<%= currentFilters.size %>') {
+            option.selected = true;
+          }
+          sizeSelect.appendChild(option);
+        }
+      }
+    } else {
+      // For other categories (e.g., accessories), disable the size filter
+      sizeSelect.disabled = true;
+    }
+
+    // Update the form's action to the selected category's route
+    const form = document.getElementById('filterForm');
+    form.action = `/categories/${selectedCategory}`;
+
+    // Apply filters immediately after changing the category
+    applyFilters({ target: categorySelect });
+  }
+
+  function applyFilters(event) {
+    event.preventDefault();
+    const form = document.getElementById('filterForm');
+    const formData = new FormData(form);
+    console.log('FormData before processing:', Object.fromEntries(formData));
+
+    const params = new URLSearchParams();
+    formData.forEach((value, key) => {
+      if (key !== 'category' && value && value !== '') {
+        params.append(key, value);
+      }
+    });
+
+    console.log('Generated URL params:', params.toString());
+    const category = document.getElementById('category').value;
+    const isSearchRoute = '<%= routeName %>' === 'search';
+    const baseUrl = isSearchRoute ? 'search' : `categories/${category}`;
+    const newUrl = `/${baseUrl}?${params.toString()}`;
+    console.log('Redirecting to:', newUrl);
+    window.location.href = newUrl;
+  }
+
+  function clearFilters() {
+    const category = document.getElementById('category').value;
+    const isSearchRoute = '<%= routeName %>' === 'search';
+    const baseUrl = isSearchRoute ? `search?query=<%= encodeURIComponent(searchQuery || '') %>` : `categories/${category}`;
+    window.location.href = `/${baseUrl}`;
+  }
+
+  // Initialize sizes on page load
+  document.addEventListener('DOMContentLoaded', () => {
+    updateSizes();
+  });
+</script>

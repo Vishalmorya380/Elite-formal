@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register</title>
+  <link rel="stylesheet" href="/css/authform.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <script src="/js/passwordToggle.js"></script>
+  <script>
+    // Client-side validation for password confirmation and phone
+    function validateForm() {
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const phone = document.getElementById('phone').value;
+
+      // Validate password match
+      if (password !== confirmPassword) {
+        alert('Passwords do not match. Please try again.');
+        return false;
+      }
+
+      // Validate phone format (required, 10 digits)
+      if (!/^\d{10}$/.test(phone)) {
+        alert('Phone number must be exactly 10 digits.');
+        return false;
+      }
+
+      return true;
+    }
+  </script>
+  <style>
+    .password-container {
+      position: relative;
+    }
+    .password-container input[type="password"],
+    .password-container input[type="text"] {
+      padding-right: 40px; /* Make space for the icon */
+      width: 100%;
+    }
+    .password-container .toggle-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #666;
+    }
+    .password-container .toggle-password:hover {
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <%- include('partials/header') %>
+
+  <div class="auth-form">
+    <h2>Register</h2>
+    <% if (error) { %>
+      <div class="error-message"><%= error %></div>
+    <% } %>
+    <form action="/auth/register" method="POST" onsubmit="return validateForm()">
+      <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone Number:</label>
+        <input type="text" id="phone" name="phone" placeholder="Enter 10-digit phone number" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <div class="password-container">
+          <input type="password" id="password" name="password" required>
+          <i class="fas fa-eye toggle-password" id="togglePassword" onclick="togglePasswordVisibility('password')"></i>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password:</label>
+        <div class="password-container">
+          <input type="password" id="confirmPassword" name="confirmPassword" required>
+          <i class="fas fa-eye toggle-password" id="togglePasswordConfirm" onclick="togglePasswordVisibility('confirmPassword')"></i>
+        </div>
+      </div>
+      <button type="submit" class="btn">Register</button>
+      <a href="/auth/login" class="register-link">Already have an account? Login here</a>
+    </form>
+  </div>
+
+  <%- include('partials/footer') %>
+</body>
+</html>

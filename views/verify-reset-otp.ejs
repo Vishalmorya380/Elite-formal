@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Verify Reset OTP</title>
+</head>
+<body>
+  <%- include('partials/header') %>
+  <h1>Verify Your OTP for Password Reset</h1>
+  <form action="/auth/verify-reset-otp" method="post">
+    <input type="hidden" id="email" name="email" value="<%= email %>">
+    <label for="otp">OTP:</label>
+    <input type="text" id="otp" name="otp" required><br><br>
+
+    <button type="submit">Verify OTP</button>
+  </form>
+</body>
+<%- include('partials/footer') %>
+</html>

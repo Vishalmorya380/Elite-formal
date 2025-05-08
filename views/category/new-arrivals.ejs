@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Arrivals - Formal Wear Store</title>
+</head>
+<body>
+  <%- include('category-template', { 
+    routeName: 'new-arrivals', 
+    categoryName: "New Arrivals", 
+    pageTitle: "New Arrivals - Elite Formal Wear Store",
+    products: products,
+    subcategories: subcategories,
+    sizes: sizes,
+    colors: colors,
+    allCategories: allCategories,
+    currentFilters: currentFilters,
+    user: user
+  }) %>
+</body>
+</html>

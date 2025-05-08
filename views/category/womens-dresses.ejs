@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Women's Dresses - Formal Wear Store</title>
+</head>
+<body>
+  <%- include('category-template', { 
+    routeName: 'womens-dresses', 
+    categoryName: "Women's Dresses", 
+    pageTitle: "Women's Dresses - Elite Formal Wear Store",
+    products: products,
+    subcategories: subcategories,
+    sizes: sizes,
+    colors: colors,
+    allCategories: allCategories,
+    currentFilters: currentFilters,
+    user: user
+  }) %>
+</body>
+</html>

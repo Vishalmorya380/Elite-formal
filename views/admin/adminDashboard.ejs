@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" type="text/css" href="/css/admin/adminDashboard.css">
+</head>
+<body>
+  <%- include('../partials/header', { user: user }) %>
+  <div class="admin-container">
+    <h2>Welcome, <%= user.username %></h2>
+    <p>This is the admin dashboard.</p>
+    <div class="admin-links">
+      <a href="/admin/products">Manage Products</a>
+       <a href="/admin/stock-management">Manage Stock</a> <!-- Added stock management link -->
+      <a href="/admin/users">Manage Users</a>
+      <a href="/admin/orders">Manage Orders</a>
+      <a href="/admin/analytics">View Analytics</a>
+      <a href="/admin/coupons">Manage Coupons</a>
+    </div>
+    <div class="sub-links">
+      <h3>Product Categories</h3>
+      <ul>
+        <li>Men
+          <ul>
+            <li><a href="/admin/products?category=men&subcategory=shirts">Shirts</a></li>
+            <li><a href="/admin/products?category=men&subcategory=tshirts">T-Shirts</a></li>
+            <li><a href="/admin/products?category=men&subcategory=jackets">Jackets</a></li>
+            <li><a href="/admin/products?category=men&subcategory=accessories">Accessories</a></li>
+          </ul>
+        </li>
+        <li>Women
+          <ul>
+            <li><a href="/admin/products?category=women&subcategory=shirts">Shirts</a></li>
+            <li><a href="/admin/products?category=women&subcategory=tshirts">T-Shirts</a></li>
+            <li><a href="/admin/products?category=women&subcategory=jackets">Jackets</a></li>
+            <li><a href="/admin/products?category=women&subcategory=accessories">Accessories</a></li>
+          </ul>
+        </li>
+        <li>Kids
+          <ul>
+            <li><a href="/admin/products?category=kids&subcategory=shirts">Shirts</a></li>
+            <li><a href="/admin/products?category=kids&subcategory=tshirts">T-Shirts</a></li>
+            <li><a href="/admin/products?category=kids&subcategory=jackets">Jackets</a></li>
+            <li><a href="/admin/products?category=kids&subcategory=accessories">Accessories</a></li>
+          </ul>
+        </li>
+        <li>Other Categories
+          <ul>
+            <li><a href="/admin/products?category=new_arrivals">New Arrivals</a></li>
+            <li><a href="/admin/products?category=sale">Sale Items</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <%- include('../partials/footer', { user: user }) %>
+</body>
+</html>

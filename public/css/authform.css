@@ -1,0 +1,120 @@
+/* Elegant Authentication Form */
+.auth-form {
+  max-width: 450px;
+  margin: 80px auto;
+  padding: 30px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #1f1f2e, #2a2a3d);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+  font-family: 'Poppins', sans-serif;
+  text-align: center;
+  animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.auth-form h2 {
+  font-size: 26px;
+  color: #ffd700;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.auth-form .form-group {
+  margin-bottom: 18px;
+}
+
+.auth-form label {
+  display: block;
+  font-size: 14px;
+  color: #d1d1e0;
+  margin-bottom: 6px;
+  text-align: left;
+}
+
+.auth-form input {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  background: #2e2e4a;
+  color: #ffffff;
+  outline: none;
+  transition: 0.3s;
+}
+
+.auth-form input:focus {
+  background: #3a3a5a;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+}
+
+.auth-form button {
+  width: 100%;
+  padding: 14px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  background: #ffd700;
+  color: #1f1f2e;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.auth-form button:hover {
+  background: #ffcc00;
+  box-shadow: 0 4px 10px rgba(255, 215, 0, 0.6);
+}
+
+.auth-form .forgot-password {
+  display: block;
+  margin-top: 12px;
+  font-size: 14px;
+  color: #ffcc00;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.auth-form .forgot-password:hover {
+  text-decoration: underline;
+}
+
+.auth-form .social-login {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.auth-form .social-login a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px;
+  height: 45px;
+  margin: 0 10px;
+  border-radius: 50%;
+  background: #4267B2;
+  color: white;
+  font-size: 18px;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.auth-form .social-login a.google {
+  background: #db4437;
+}
+
+.auth-form .social-login a:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.3);
+}

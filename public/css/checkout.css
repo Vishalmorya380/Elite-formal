@@ -1,0 +1,179 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f7f7f7;
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  /* Header */
+  header {
+    background-color: #2c3e50;
+    padding: 20px 0;
+    text-align: center;
+  }
+  
+  header h1 {
+    color: #fff;
+    font-size: 36px;
+    font-weight: 600;
+  }
+  
+  /* Checkout Styles */
+  h2 {
+    margin-top: 30px;
+    font-size: 28px;
+    color: #333;
+  }
+  
+  table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+  }
+  
+  thead {
+    background-color: #2c3e50;
+    color: #fff;
+  }
+  
+  th, td {
+    padding: 12px;
+    text-align: center;
+  }
+  
+  th {
+    font-size: 16px;
+    text-transform: uppercase;
+  }
+  
+  td {
+    font-size: 14px;
+  }
+  
+  td img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+  }
+  
+  tfoot {
+    background-color: #ecf0f1;
+  }
+  
+  tfoot td {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  tfoot td:last-child {
+    color: #e67e22;
+  }
+  
+  tfoot td span {
+    font-weight: normal;
+    color: #888;
+  }
+  
+
+  /* Shipping Information Form */
+form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px; /* Limit max width */
+    margin: 0 auto; /* Center the form */
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 5px;
+  }
+  
+  .form-group input, 
+  .form-group select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    color: #333;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+  
+  .form-group input:focus, 
+  .form-group select:focus {
+    border-color: #f39c12;
+  }
+  
+  button[type="submit"] {
+    background-color: #f39c12;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease, transform 0.3s;
+    margin-top: 20px; /* Added margin for better spacing */
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #e67e22;
+    transform: translateY(-2px);
+  }
+  
+  button[type="submit"]:active {
+    transform: translateY(2px);
+  }
+  
+  /* Form Label and Input Adjustments */
+  .form-group input,
+  .form-group select {
+    font-size: 14px;
+    padding: 8px; /* Reduce padding for compact layout */
+  }
+  
+  .form-group label {
+    font-size: 14px;
+    color: #666;
+  }
+  
+  @media (max-width: 768px) {
+    form {
+      padding: 15px;
+    }
+  
+    .form-group {
+      margin-bottom: 12px;
+    }
+  
+    .form-group input, 
+    .form-group select {
+      padding: 8px;
+      font-size: 12px;
+    }
+  
+    button[type="submit"] {
+      padding: 10px 20px;
+      font-size: 14px;
+    }
+  }
+  

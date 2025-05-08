@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Registration</title>
+  <link rel="stylesheet" type="text/css" href="/css/authform.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <script src="/js/passwordToggle.js"></script>
+  <script>
+    function validateForm() {
+      const phone = document.getElementById('phone').value;
+      const password = document.getElementById('password').value;
+
+      // Validate phone (10 digits)
+      if (!/^\d{10}$/.test(phone)) {
+        alert('Phone number must be exactly 10 digits.');
+        return false;
+      }
+
+      // Validate password
+      // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$/;
+      // if (!passwordRegex.test(password)) {
+      //   alert('Password must be at least 10 characters long, contain one special character, one uppercase letter, one lowercase letter, and one numeric digit.');
+      //   return false;
+      // }
+
+      // return true;
+    }
+
+    function togglePasswordVisibility() {
+      const passwordInput = document.getElementById('password');
+      const toggleIcon = document.getElementById('togglePassword');
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
+      } else {
+        passwordInput.type = 'password';
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
+      }
+    }
+  </script>
+  <style>
+    .password-container {
+      position: relative;
+    }
+    .password-container input[type="password"],
+    .password-container input[type="text"] {
+      padding-right: 40px; /* Make space for the icon */
+      width: 100%;
+    }
+    .password-container .toggle-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #666;
+    }
+    .password-container .toggle-password:hover {
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <%- include('partials/header') %>
+  <div class="auth-form">
+    <h2>Admin Register</h2>
+    <% if (messages.error) { %>
+      <p class="error"><%= messages.error %></p>
+    <% } %>
+    <% if (messages.success) { %>
+      <p class="success"><%= messages.success %></p>
+    <% } %>
+    <form action="/admin/register" method="POST" onsubmit="return validateForm()">
+      <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone Number:</label>
+        <input type="text" id="phone" name="phone" placeholder="Enter 10-digit phone number" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <div class="password-container">
+          <input type="password" id="password" name="password" required>
+          <i class="fas fa-eye toggle-password" id="togglePassword" onclick="togglePasswordVisibility()"></i>
+        </div>
+        <small>Password must be at least 10 characters long, contain one special character, one uppercase letter, one lowercase letter, and one numeric digit.</small>
+      </div>
+      <div class="form-group">
+        <label for="adminCode">Admin Code:</label>
+        <input type="text" id="adminCode" name="adminCode" required>
+      </div>
+      <button type="submit" class="btn">Register</button>
+      <p><a href="/admin/login">Already have an account? Login here</a></p>
+    </form>
+  </div>
+  <%- include('partials/footer') %>
+</body>
+</html>

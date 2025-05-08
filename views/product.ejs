@@ -1,0 +1,169 @@
+<% function checkStock(size) { %>
+  <% let stockStatus = 'out_of_stock'; %>
+  <% if (size) { %>
+    <% product.stockDetails.forEach(detail => { %>
+      <% if (detail.size === size && detail.stock > 0) { %>
+        <% stockStatus = 'in_stock'; %>
+      <% } %>
+    <% }); %>
+  <% } else { %>
+    <% stockStatus = product.stock > 0 ? 'in_stock' : 'out_of_stock'; %>
+  <% } %>
+  <% return stockStatus; %>
+<% } %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= product.name %> - Formal Wear Store</title>
+  <link rel="stylesheet" href="/css/product.css">
+  <style>
+    .price .sale-price {
+      color: #007bff;
+      font-weight: 600;
+    }
+    .price .original-price {
+      color: #999;
+      text-decoration: line-through;
+      margin-left: 5px;
+    }
+  </style>
+</head>
+<body>
+  <%- include('partials/header', { user: user }) %>
+
+  <!-- Product Details Section -->
+  <section class="product-details">
+    <div class="container">
+      <div class="product-images">
+        <img src="<%= product.image %>" alt="<%= product.name %>" class="main-image">
+      </div>
+      <div class="product-info">
+        <h1><%= product.name %></h1>
+        <p class="price">
+          <% if (product.discountedPrice) { %>
+            <span class="sale-price">₹<%= (product.price - product.discountedPrice).toFixed(2) %></span>
+            <span class="original-price">₹<%= product.price.toFixed(2) %></span>
+          <% } else { %>
+            ₹<%= product.price.toFixed(2) %>
+          <% } %>
+        </p>
+        <div class="product-options">
+          <label for="category">Category:</label>
+          <input type="text" id="category" name="category" value="<%= product.category %>" readonly>
+          <label for="subcategory">Subcategory:</label>
+          <input type="text" id="subcategory" name="subcategory" value="<%= product.subcategory %>" readonly>
+          <label for="color">Color:</label>
+          <input type="text" id="color" name="color" value="<%= product.color %>" readonly>
+
+          <!-- Size Selection -->
+          <label for="size">Size:</label>
+          <select id="size" name="size">
+            <% const availableSizes = [...new Set(product.stockDetails.map(detail => detail.size).filter(s => s))]; %>
+            <% if (availableSizes.length > 0) { %>
+              <% availableSizes.forEach(size => { %>
+                <option value="<%= size %>" <%= product.size === size ? 'selected' : '' %> <%= checkStock(size) === 'out_of_stock' ? 'disabled' : '' %>><%= size %></option>
+              <% }); %>
+            <% } else if (product.size) { %>
+              <option value="<%= product.size %>" <%= checkStock(product.size) === 'out_of_stock' ? 'disabled' : '' %>><%= product.size %></option>
+            <% } else { %>
+              <option value="" disabled>No sizes available</option>
+            <% } %>
+          </select>
+        </div>
+        <div class="product-buttons">
+          <form action="/cart/add/<%= product._id %>" method="POST" id="add-to-cart-form">
+            <input type="hidden" name="size" id="hidden-size" value="">
+            <button type="submit" class="btn" <%= product.stock === 0 ? 'disabled' : '' %>>Add to Cart</button>
+          </form>
+          <form action="/cart/add/<%= product._id %>?buyNow=true" method="POST" id="buy-now-form">
+            <input type="hidden" name="size" id="hidden-size-buy" value="">
+            <button type="submit" class="btn" <%= product.stock === 0 ? 'disabled' : '' %>>Buy Now</button>
+          </form>
+        </div>
+        <div class="product-specifications">
+          <h3>Specifications</h3>
+          <ul>
+            <li>100% Cotton Flannel</li>
+            <li>Locked Stitched Buttons</li>
+            <li>German Interlining</li>
+            <li>Cotton Flannel</li>
+            <li>Slim Fit</li>
+          </ul>
+        </div>
+        <div class="wash-care">
+          <h3>Wash Care</h3>
+          <p>Machine wash in normal water with similar colors. Line dry in shade.</p>
+        </div>
+        <div class="delivery-info">
+          <h3>Delivery Information</h3>
+          <p>Free delivery pan India.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <%- include('partials/footer', { user: user }) %>
+
+  <script>
+    // Update hidden inputs when size changes
+    document.addEventListener('DOMContentLoaded', function() {
+      const sizeSelect = document.getElementById('size');
+      const addToCartForm = document.getElementById('add-to-cart-form');
+      const buyNowForm = document.getElementById('buy-now-form');
+      const hiddenSizeInput = document.getElementById('hidden-size');
+      const hiddenSizeInputBuy = document.getElementById('hidden-size-buy');
+
+      // Define checkStock function in JavaScript for client-side use
+      function checkStock(size) {
+        // Use raw output and handle fallbacks in JavaScript
+        const rawStockDetails = '<%- JSON.stringify(product.stockDetails) %>';
+        const stockDetails = rawStockDetails === 'undefined' ? [] : JSON.parse(rawStockDetails);
+        const rawTotalStock = '<%= product.stock %>';
+        const totalStock = rawTotalStock === 'undefined' ? 0 : parseInt(rawTotalStock, 10);
+
+        if (size) {
+          let stockStatus = 'out_of_stock';
+          stockDetails.forEach(detail => {
+            if (detail.size === size && detail.stock > 0) {
+              stockStatus = 'in_stock';
+            }
+          });
+          return stockStatus;
+        } else {
+          return totalStock > 0 ? 'in_stock' : 'out_of_stock';
+        }
+      }
+
+      function updateHiddenInputs() {
+        if (sizeSelect) {
+          const sizeValue = sizeSelect.value || '';
+          hiddenSizeInput.value = sizeValue;
+          hiddenSizeInputBuy.value = sizeValue;
+
+          // Enable/disable buttons based on selected size stock
+          const stockStatus = sizeValue ? checkStock(sizeValue) : '<%= product.stock > 0 ? "in_stock" : "out_of_stock" %>';
+          const buttons = [addToCartForm.querySelector('button'), buyNowForm.querySelector('button')];
+          buttons.forEach(button => {
+            if (stockStatus === 'out_of_stock') {
+              button.disabled = true;
+              button.textContent = button.textContent.replace('Add to Cart', 'Out of Stock').replace('Buy Now', 'Out of Stock');
+            } else {
+              button.disabled = false;
+              button.textContent = button.textContent.replace('Out of Stock', 'Add to Cart').replace('Out of Stock', 'Buy Now');
+            }
+          });
+        }
+      }
+
+      if (sizeSelect) {
+        sizeSelect.addEventListener('change', updateHiddenInputs);
+      }
+
+      // Set initial values
+      updateHiddenInputs();
+    });
+  </script>
+</body>
+</html>

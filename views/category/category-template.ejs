@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= pageTitle %> - Elite Formal Wear Store</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      line-height: 1.6;
+    }
+
+    .shop-container {
+      display: flex;
+      max-width: 1200px;
+      margin: 20px auto;
+      gap: 20px;
+    }
+
+    .filter-sidebar {
+      width: 25%;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 20px;
+      align-self: flex-start;
+      height: fit-content;
+    }
+
+    .filter-sidebar h2 {
+      font-size: 1.5em;
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    .filter-section {
+      margin-bottom: 20px;
+    }
+
+    .filter-section label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: #555;
+    }
+
+    select, input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+
+    .price-range {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .price-range span {
+      font-size: 0.9em;
+      color: #666;
+    }
+
+    .size-filter {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .checkbox-group, .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .checkbox-group label, .radio-group label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.9em;
+      color: #666;
+    }
+
+    .checkbox-group input, .radio-group input {
+      margin: 0;
+    }
+
+    .filter-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .filter-actions button {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9em;
+      transition: background-color 0.3s;
+    }
+
+    .filter-actions button:first-child {
+      background-color: #007bff;
+      color: #fff;
+    }
+
+    .filter-actions button:last-child {
+      background-color: #6c757d;
+      color: #fff;
+    }
+
+    .filter-actions button:hover {
+      opacity: 0.9;
+    }
+
+    .product-listing {
+      width: 75%;
+      padding: 20px;
+    }
+
+    .sort-section {
+      margin-bottom: 20px;
+    }
+
+    .sort-section label {
+      font-weight: 600;
+      margin-right: 10px;
+      color: #555;
+    }
+
+    .sort-section select {
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+
+    .products h2 {
+      font-size: 1.5em;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .product-card {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      transition: transform 0.2s;
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .product-card img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+
+    .product-card h3 {
+      font-size: 1.1em;
+      margin: 10px 0;
+      color: #333;
+    }
+
+    .product-card p {
+      font-size: 0.9em;
+      color: #666;
+      margin: 5px 0;
+    }
+
+    .product-card .btn {
+      display: inline-block;
+      padding: 8px 15px;
+      margin: 5px 0;
+      background-color: #007bff;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+
+    .product-card .btn:hover {
+      background-color: #0056b3;
+    }
+
+    .product-card button.btn {
+      background-color: #28a745;
+      border: none;
+      cursor: pointer;
+    }
+
+    .product-card button.btn:hover {
+      background-color: #218838;
+    }
+
+    .product-card button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 768px) {
+      .shop-container {
+        flex-direction: column;
+      }
+      .filter-sidebar, .product-listing {
+        width: 100%;
+      }
+      .filter-sidebar {
+        position: static;
+      }
+      .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <%- include('../partials/header', { user: user }) %>
+
+  <!-- Main Content with Sidebar -->
+  <div class="shop-container">
+    <!-- Include the Filter Partial -->
+    <%- include('../partials/filters', { 
+      routeName: routeName, 
+      categoryName: categoryName, 
+      subcategories: subcategories, 
+      sizes: sizes, 
+      colors: colors, 
+      allCategories: allCategories, 
+      currentFilters: currentFilters, 
+      products: products,
+      searchQuery: routeName === 'search' ? searchQuery : undefined
+    }) %>
+
+    <main class="product-listing">
+      <!-- Include the Sorting Partial -->
+      <%- include('../partials/sorting', { 
+        routeName: routeName, 
+        currentFilters: currentFilters,
+        searchQuery: routeName === 'search' ? searchQuery : undefined
+      }) %>
+
+      <!-- Product Section -->
+      <section class="products">
+        <h2><%= pageTitle %></h2>
+        <% if (products && products.length > 0) { %>
+          <div class="product-grid">
+            <% products.forEach(product => { %>
+              <% if (categoryName !== 'New Arrivals' || !product.discountedPrice || currentFilters.discount === 'yes') { %>
+                <div class="product-card">
+                  <img src="<%= product.image %>" alt="<%= product.name %>">
+                  <h3><%= product.name %></h3>
+                  <p>Price: ₹<%= product.discountedPrice ? product.discountedPrice : product.price %></p>
+                  <% if (product.discountedPrice && product.discountedPrice < product.price) { %>
+                    <p>Original Price: ₹<%= product.price %> (Discounted)</p>
+                  <% } %>
+                  <p><%= product.stockDetails && product.stockDetails.some(stock => stock.stock > 0) ? 'In Stock' : 'Out of Stock' %></p>
+                  <a href="/products/<%= product._id %>" class="btn">View Details</a>
+                  <form action="/cart/add/<%= product._id %>" method="POST">
+                    <button type="submit" class="btn" <%= !product.stockDetails || !product.stockDetails.some(stock => stock.stock > 0) ? 'disabled' : '' %>>Add to Cart</button>
+                  </form>
+                </div>
+              <% } %>
+            <% }) %>
+          </div>
+        <% } else { %>
+          <p>No products found in this category.</p>
+        <% } %>
+      </section>
+    </main>
+  </div>
+
+  <%- include('../partials/footer', { user: user }) %>
+
+  <script>
+    // Handle sort form submission to include filter parameters
+    document.getElementById('sortForm')?.addEventListener('submit', function(event) {
+      console.log('sortForm submitted');
+      const form = document.getElementById('filterForm');
+      const filterData = new FormData(form);
+      filterData.forEach((value, key) => {
+        if (!this.querySelector(`input[name="${key}"]`) && !this.querySelector(`select[name="${key}"]`)) {
+          const hiddenInput = document.createElement('input');
+          hiddenInput.type = 'hidden';
+          hiddenInput.name = key;
+          hiddenInput.value = value;
+          this.appendChild(hiddenInput);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

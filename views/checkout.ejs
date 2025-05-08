@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Checkout</title>
+  <link rel="stylesheet" type="text/css" href="/css/checkout.css">
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <style>
+    .error-message {
+      color: red;
+      font-size: 0.9em;
+      display: none;
+      margin-top: 5px;
+    }
+    .constraint-message {
+      color: gray;
+      font-size: 0.8em;
+      margin-top: 5px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    input:invalid {
+      border: 1px solid red;
+    }
+    input:valid {
+      border: 1px solid green;
+    }
+  </style>
+</head>
+<body>
+  <%- include('partials/header') %>
+  <h1>Checkout</h1>
+  <% if (cart.length > 0) { %>
+    <h2>Your Cart</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Name</th>
+          <th>Size</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% cart.forEach(item => { %>
+          <tr>
+            <td><img src="<%= item.image %>" alt="<%= item.name %>" width="50"></td>
+            <td><%= item.name %></td>
+            <td><%= item.size || 'N/A' %> <%= item.specificSize ? `(${item.specificSize})` : '' %></td>
+            <td>₹<%= item.price %></td>
+            <td><%= item.quantity %></td>
+            <td>₹<%= (item.price * item.quantity).toFixed(2) %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="4">Subtotal</td>
+          <td>₹<%= totalBeforeDiscount %></td>
+        </tr>
+        <% if (discount > 0) { %>
+          <tr>
+            <td colspan="4">Discount</td>
+            <td>-₹<%= discount %></td>
+          </tr>
+        <% } %>
+        <tr>
+          <td colspan="4">Total GST</td>
+          <td>₹<%= totalGST %></td>
+        </tr>
+        <tr>
+          <td colspan="4">Final Total</td>
+          <td>₹<%= total %></td>
+        </tr>
+      </tfoot>
+    </table>
+    <h2>Shipping Information</h2>
+    <form id="checkout-form" action="/checkout/place-order" method="POST">
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" pattern="[A-Za-z\s]{5,30}" required value="<%= user.name || '' %>">
+        <div class="constraint-message">5-30 characters, letters and spaces only</div>
+        <div id="nameError" class="error-message">Enter proper name</div>
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone:</label>
+        <input type="text" id="phone" name="phone" pattern="\d{10}" required value="<%= user.phone || '' %>">
+        <div class="constraint-message">Exactly 10 digits</div>
+        <div id="phoneError" class="error-message">Enter proper phone number (10 digits)</div>
+      </div>
+      <div class="form-group">
+        <label for="address">Address:</label>
+        <input type="text" id="address" name="address" pattern="[A-Za-z0-9\s,.#-]{10,100}" required>
+        <div class="constraint-message">10-100 characters, letters, numbers, spaces, commas, periods, #, or -</div>
+        <div id="addressError" class="error-message">Enter proper address</div>
+      </div>
+      <div class="form-group">
+        <label for="city">City:</label>
+        <input type="text" id="city" name="city" required>
+        <div id="cityError" class="error-message">Enter proper city</div>
+      </div>
+      <div class="form-group">
+        <label for="state">State:</label>
+        <input type="text" id="state" name="state" required>
+        <div id="stateError" class="error-message">Enter proper state</div>
+      </div>
+      <div class="form-group">
+        <label for="zip">ZIP Code:</label>
+        <input type="text" id="zip" name="zip" pattern="\d{6}" required>
+        <div class="constraint-message">Exactly 6 digits</div>
+        <div id="zipError" class="error-message">Enter proper zip code (6 digits)</div>
+      </div>
+      <div class="form-group">
+        <label>Payment Method:</label>
+        <div>
+          <label>
+            <input type="radio" name="paymentMethod" value="razorpay" checked> Razorpay
+          </label>
+          <label>
+            <input type="radio" name="paymentMethod" value="cod"> Cash on Delivery
+          </label>
+        </div>
+      </div>
+      <input type="hidden" name="total" value="<%= total %>">
+      <input type="hidden" name="cart" value='<%= JSON.stringify(cart) %>'>
+      <button type="button" id="place-order-button" class="btn">Place Order</button>
+    </form>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('checkout-form');
+        const placeOrderButton = document.getElementById('place-order-button');
+        const inputs = form.querySelectorAll('input, select');
+
+        // Prevent moving to next field if current field is invalid
+        inputs.forEach((input, index) => {
+          input.addEventListener('input', () => {
+            const errorDiv = document.getElementById(`${input.id}Error`);
+            if (input.validity.valid) {
+              errorDiv.style.display = 'none';
+              input.style.border = '1px solid green';
+            } else {
+              errorDiv.style.display = 'block';
+              input.style.border = '1px solid red';
+            }
+          });
+
+          input.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab' && !input.validity.valid) {
+              e.preventDefault();
+              const errorDiv = document.getElementById(`${input.id}Error`);
+              errorDiv.style.display = 'block';
+              input.style.border = '1px solid red';
+              input.focus();
+            }
+          });
+        });
+
+        // Prevent form submission if any field is invalid
+        form.addEventListener('submit', (e) => {
+          let hasErrors = false;
+          inputs.forEach(input => {
+            if (!input.validity.valid) {
+              hasErrors = true;
+              const errorDiv = document.getElementById(`${input.id}Error`);
+              errorDiv.style.display = 'block';
+              input.style.border = '1px solid red';
+            }
+          });
+
+          if (hasErrors) {
+            e.preventDefault();
+          }
+        });
+
+        function getFormData() {
+          const formData = {
+            name: document.getElementById('name').value.trim(),
+            phone: document.getElementById('phone').value.trim(),
+            address: document.getElementById('address').value.trim(),
+            city: document.getElementById('city').value.trim(),
+            state: document.getElementById('state').value.trim(),
+            zip: document.getElementById('zip').value.trim(),
+            paymentMethod: document.querySelector('input[name="paymentMethod"]:checked').value,
+            total: document.getElementsByName('total')[0].value,
+            cart: JSON.parse(document.getElementsByName('cart')[0].value)
+          };
+          console.log('Form Data:', formData);
+          return formData;
+        }
+
+        function createOrder(orderData) {
+          console.log('Order Data being sent to server:', orderData);
+          return fetch('/checkout/place-order', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(orderData)
+          })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then(data => {
+            if (data.error) {
+              throw new Error(data.error);
+            }
+            console.log('Server response:', data);
+            return data;
+          })
+          .catch(error => {
+            console.error('Error creating order:', error);
+            throw error;
+          });
+        }
+
+        placeOrderButton.addEventListener('click', function(event) {
+          // Validate all fields before proceeding
+          let hasErrors = false;
+          inputs.forEach(input => {
+            if (!input.validity.valid) {
+              hasErrors = true;
+              const errorDiv = document.getElementById(`${input.id}Error`);
+              errorDiv.style.display = 'block';
+              input.style.border = '1px solid red';
+            }
+          });
+
+          if (hasErrors) {
+            alert('Please correct the errors in the form before proceeding.');
+            return;
+          }
+
+          const orderData = getFormData();
+
+          createOrder(orderData)
+            .then(data => {
+              if (orderData.paymentMethod === 'cod') {
+                alert('Order placed successfully with COD!');
+                window.location.href = '/checkout/order-confirmation';
+              } else if (orderData.paymentMethod === 'razorpay') {
+                const options = {
+                  key: 'rzp_test_zIRQMLqhOL7ujV',
+                  amount: parseFloat(orderData.total) * 100,
+                  currency: 'INR',
+                  name: 'Formal Wear Store',
+                  description: 'Order Payment',
+                  order_id: data.razorpayOrderID,
+                  handler: function(response) {
+                    alert('Payment successful!');
+                    fetch('/checkout/confirm-payment', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({
+                        orderID: data.razorpayOrderID,
+                        razorpayPaymentID: response.razorpay_payment_id,
+                        temporaryOrder: data.temporaryOrder
+                      })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                      if (data.success) {
+                        window.location.href = '/checkout/order-confirmation';
+                      } else {
+                        alert('Payment confirmation failed. Please contact support.');
+                      }
+                    })
+                    .catch(error => {
+                      console.error('Error confirming payment:', error);
+                      alert('Payment confirmation failed. Please contact support.');
+                    });
+                  },
+                  prefill: {
+                    name: orderData.name,
+                    email: '<%= user.email || "user@example.com" %>',
+                    contact: orderData.phone
+                  },
+                  notes: {
+                    address: orderData.address
+                  },
+                  theme: {
+                    color: '#007bff'
+                  }
+                };
+
+                const rzp = new Razorpay(options);
+                rzp.open();
+              }
+            })
+            .catch(error => {
+              alert('Failed to place the order: ' + error.message);
+              console.error('Order placement error:', error);
+            });
+        });
+      });
+    </script>
+  <% } else { %>
+    <p>Your cart is empty.</p>
+  <% } %>
+  <%- include('partials/footer') %>
+</body>
+</html>

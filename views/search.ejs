@@ -1,0 +1,14 @@
+<%- include('category/category-template', { 
+    routeName: 'search', 
+    categoryName: `Search Results for "${searchQuery}"`, 
+    pageTitle: `Search Results for "${searchQuery}" - Formal Wear Store`,
+    products: products,
+    subcategories: subcategories,
+    sizes: sizes,
+    specificSizes: specificSizes,
+    specificSizesString: specificSizesString,
+    colors: colors,
+    allCategories: allCategories,
+    currentFilters: currentFilters,
+    user: user
+  }) %>

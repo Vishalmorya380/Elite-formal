@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Overview</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('partials/header') %>
+
+  <section class="account-overview">
+    <h1>Welcome, <%= user.name %>!</h1>
+    <ul>
+      <li><a href="/account/profile">Profile Information</a></li>
+      <li><a href="/account/orders">Order History</a></li>
+      <li><a href="/account/wishlist">Wishlist</a></li>
+      <li><a href="/cart">Your Cart</a></li>
+    </ul>
+  </section>
+
+  <%- include('partials/footer') %>
+</body>
+</html>

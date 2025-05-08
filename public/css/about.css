@@ -1,0 +1,104 @@
+/* ==================== ABOUT US SECTION ==================== */
+.about-us {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 50px 20px;
+    background: #f4f4f9; /* Background only for About Us */
+  }
+  
+  /* ==================== CONTAINER (About Us Only) ==================== */
+  .about-us .container {
+    max-width: 900px;
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  /* ==================== HEADINGS ==================== */
+  .about-us .container h1 {
+    font-size: 2.5rem;
+    color: #222;
+    margin-bottom: 15px;
+    border-bottom: 3px solid #72c2f5;
+    display: inline-block;
+    padding-bottom: 5px;
+  }
+  
+  .about-us .container h2 {
+    font-size: 1.8rem;
+    color: #444;
+    margin-top: 30px;
+    margin-bottom: 10px;
+  }
+  
+  /* ==================== PARAGRAPHS ==================== */
+  .about-us .container p {
+    font-size: 1.1rem;
+    color: #555;
+    line-height: 1.8;
+    margin-bottom: 20px;
+  }
+  
+  /* ==================== VALUES LIST ==================== */
+  .about-us .container ul {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+  }
+  
+  .about-us .container ul li {
+    font-size: 1.1rem;
+    padding: 10px;
+    background: #f0f8ff;
+    margin: 8px 0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.3s ease-in-out;
+  }
+  
+  .about-us .container ul li strong {
+    color: #2c6ea6;
+  }
+  
+  .about-us .container ul li:hover {
+    background: #d9ecff;
+  }
+  
+  /* ==================== EMAIL LINK ==================== */
+  .about-us .container a {
+    text-decoration: none;
+    color: #2c6ea6;
+    font-weight: bold;
+    transition: color 0.3s;
+  }
+  
+  .about-us .container a:hover {
+    color: #174a74;
+  }
+  
+  /* ==================== RESPONSIVE DESIGN ==================== */
+  @media (max-width: 768px) {
+    .about-us .container {
+      padding: 30px;
+    }
+  
+    .about-us .container h1 {
+      font-size: 2rem;
+    }
+  
+    .about-us .container h2 {
+      font-size: 1.5rem;
+    }
+  
+    .about-us .container p, 
+    .about-us .container ul li {
+      font-size: 1rem;
+    }
+  }
+  

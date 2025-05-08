@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formal Wear Store</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/carosel.js"></script>
+  <script src="/js/carouselcaterory.js"></script>
+  <style>
+    .view-all {
+      font-size: 0.9em;
+      color: #007bff;
+      text-decoration: none;
+      float: right;
+      margin-top: 5px;
+    }
+
+    .view-all:hover {
+      text-decoration: underline;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .product-card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      background-color: #fff;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-card img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+
+    .product-card h3 {
+      font-size: 1.1em;
+      margin: 10px 0;
+    }
+
+    .product-card p {
+      font-size: 0.9em;
+      color: #333;
+    }
+
+    .product-card .original-price {
+      text-decoration: line-through;
+      color: #999;
+      margin-left: 5px;
+    }
+
+    .product-card .btn {
+      display: inline-block;
+      padding: 8px 16px;
+      margin: 5px;
+      background-color: #007bff;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+
+    .product-card .btn:hover {
+      background-color: #0056b3;
+    }
+
+    .product-card .out-of-stock {
+      color: #ff0000;
+      font-weight: bold;
+    }
+
+    .filter-section {
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 15px;
+    }
+  </style>
+</head>
+<body>
+  <%- include('partials/header', { user: user }) %>
+
+  <!-- Hero Section -->
+  <section class="hero" style="background-image: url(https://images.pexels.com/photos/1884579/pexels-photo-1884579.jpeg?auto=compress&cs=tinysrgb&w=600);">
+    <div class="hero-content">
+      <h1>Welcome to Elite Formal Wear Store</h1>
+      <p>Discover the finest collection of formal attire</p>
+      <a href="/products" class="btn">Shop Now</a>
+    </div>
+  </section>
+
+
+  <!-- New Arrivals Section -->
+  <section class="products">
+    <h2>New Arrivals <a href="/categories/new-arrivals" class="view-all">View All</a></h2>
+    <% if (newArrivals.length > 0) { %>
+      <div class="product-grid">
+        <% newArrivals.forEach(product => { %>
+          <div class="product-card">
+            <img src="<%= product.image || '/images/placeholder.jpg' %>" alt="<%= product.name %>">
+            <h3><%= product.name %></h3>
+            <p>Price: ₹<%= product.price %></p>
+            <% if (product.stockDetails && product.stockDetails.length > 0) { %>
+              <% const isOutOfStock = product.stockDetails.every(detail => detail.stock === 0); %>
+              <p class="<%= isOutOfStock ? 'out-of-stock' : '' %>">
+                <%= isOutOfStock ? 'Out of Stock' : 'In Stock' %>
+              </p>
+              <% if (!isOutOfStock) { %>
+                <form action="/cart/add/<%= product._id %>" method="POST">
+                  <button type="submit" class="btn">Add to Cart</button>
+                </form>
+              <% } %>
+            <% } else { %>
+              <p class="out-of-stock">Out of Stock</p>
+            <% } %>
+            <a href="/products/<%= product._id %>" class="btn">View Details</a>
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <p>No new arrivals found.</p>
+    <% } %>
+  </section>
+
+  <!-- Men's Categories Carousel -->
+  <section class="promo-carousel mens-carousel">
+    <div class="carousel-container">
+      <div class="carousel-track">
+        <div class="carousel-slide">
+          <img src="https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Men's Shirts">
+          <div class="promo-content">
+            <h3>Men's Shirts</h3>
+            <p>Explore our latest collection of formal shirts</p>
+            <a href="/categories/mens-shirts" class="btn btn-primary">Shop Now</a>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <img src="https://images.pexels.com/photos/30752874/pexels-photo-30752874/free-photo-of-man-relaxing-outdoors-by-riverside-in-casual-wear.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Men's T-Shirts">
+          <div class="promo-content">
+            <h3>Men's T-Shirts</h3>
+            <p>Stylish and comfortable formal T-shirts</p>
+            <a href="/categories/mens-tshirts" class="btn btn-primary">Shop Now</a>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <img src="https://img.freepik.com/free-photo/jeans_1203-8093.jpg?ga=GA1.1.1278972893.1746628695&semt=ais_hybrid&w=740" alt="Men's T-Shirts">
+          <div class="promo-content">
+            <h3>Men's Pant</h3>
+            <p>Stylish and comfortable Pants</p>
+            <a href="/categories/mens-pants" class="btn btn-primary">Shop Now</a>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <img src="https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Men's Shoes">
+          <div class="promo-content">
+            <h3>Men's Shoes</h3>
+            <p>Elegant shoes for every formal occasion</p>
+            <a href="/categories/mens-shoes" class="btn btn-primary">Shop Now</a>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <img src="https://images.pexels.com/photos/5192490/pexels-photo-5192490.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Men's Care">
+          <div class="promo-content">
+            <h3>Men's Care</h3>
+            <p>Premium care products for formal grooming</p>
+            <a href="/categories/mens-care" class="btn btn-primary">Shop Now</a>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <img src="https://img.freepik.com/free-photo/top-view-assortment-different-traveling-elements_23-2148884966.jpg?ga=GA1.1.1278972893.1746628695&semt=ais_hybrid&w=740" alt="Men's Accessories">
+          <div class="promo-content">
+            <h3>Men's Accessories</h3>
+            <p>Enhance your look with our accessories</p>
+            <a href="/categories/mens-accessories" class="btn btn-primary">Shop Now</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Carousel Navigation -->
+      <button class="carousel-prev"><</button>
+      <button class="carousel-next">></button>
+
+      <!-- Indicators -->
+      <div class="carousel-indicators">
+        <button class="indicator active" data-slide="0"></button>
+        <button class="indicator" data-slide="1"></button>
+        <button class="indicator" data-slide="2"></button>
+        <button class="indicator" data-slide="3"></button>
+        <button class="indicator" data-slide="4"></button>
+        <button class="indicator" data-slide="5"></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- MENS CATEGORIES Section -->
+  <section class="category-section">
+    <div class="container">
+      <h2>MENS CATEGORIES</h2>
+      <div class="category-container">
+        <!-- Men's Categories -->
+        <h3 class="category-name">Men's Shirts</h3>
+        <div class="category-item">
+          <div class="category-image">
+            <a href="/categories/mens-shirts">
+              <img src="https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Men's Shirts">
+            </a>
+          </div>
+        </div>
+
+        <h3 class="category-name">Men's T-Shirts</h3>
+        <div class="category-item">
+          <div class="category-image">
+            <a href="/categories/mens-tshirts">
+              <img src="https://images.pexels.com/photos/30752874/pexels-photo-30752874/free-photo-of-man-relaxing-outdoors-by-riverside-in-casual-wear.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Men's T-Shirts">
+            </a>
+          </div>
+        </div>
+
+        <h3 class="category-name">Men's Shoes</h3>
+        <div class="category-item">
+          <div class="category-image">
+            <a href="/categories/mens-shoes">
+              <img src="https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Men's Shoes">
+            </a>
+          </div>
+        </div>
+
+        <h3 class="category-name">Men's Care</h3>
+        <div class="category-item">
+          <div class="category-image">
+            <a href="/categories/mens-care">
+              <img src="https://images.pexels.com/photos/5192490/pexels-photo-5192490.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Men's Care">
+            </a>
+          </div>
+        </div>
+
+        <h3 class="category-name">Men's Accessories</h3>
+        <div class="category-item">
+          <div class="category-image">
+            <a href="/categories/mens-accessories">
+              <img src="https://img.freepik.com/free-photo/top-view-assortment-different-traveling-elements_23-2148884966.jpg?ga=GA1.1.1278972893.1746628695&semt=ais_hybrid&w=740" alt="Men's Accessories">
+            </a>
+          </div>
+        </div>
+
+        <!-- Added Men's Pants -->
+        <h3 class="category-name">Men's Pants</h3>
+        <div class="category-item">
+          <div class="category-image">
+            <a href="/categories/mens-pants">
+              <img src="https://img.freepik.com/free-photo/jeans_1203-8093.jpg?ga=GA1.1.1278972893.1746628695&semt=ais_hybrid&w=740" alt="Men's Pants">
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Women's Categories Carousel -->
+  <section class="promo-carousel womens-carousel">
+    <div class="carousel-container">
+      <div class="carousel-track">
+        <div class="carousel-slide">
+          <img src="https://img.freepik.com/free-photo/young-lady-pretending-show-something-her-right-side-green-shirt-looking-puzzled-front-view_176474-66915.jpg?ga=GA1.1.1278972893.1746628695&semt=ais_hybrid&w=740" alt="Women's Shirts">
+          <div class="promo-content">
+            <h3>Women's Shirts</h3>
+            <p>Chic and formal shirts for women</p>
+            <a href="/categories/womens-shirts" class="btn btn-primary">Shop Now</a>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <img src="https://img.freepik.com/premium-photo/portrait-positive-cheerful-fashionable-smiling-young-brunette-woman-casual-white-t-shirt-mockup-isolated-blue-background-with-copy-space_88135-28586.jpg?ga=GA1.1.1278972893.1746628695&semt=ais_hybrid&w=740" alt="Women's T-Shirts">
+          <div class="promo-content">
+            <h3>Women's T-Shirts</h3>
+            <p>Stylish T-shirts for formal occasions</p>
+            <a href="/categories/womens-tshirts" class="btn btn-primary">Shop Now</a>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <img src="https://img.freepik.com/free-photo/full-shot-smiley-woman-posing-outdoors_23-2150360988.jpg?ga=GA1.1.1278972893.1746628695&semt=ais_hybrid&w=740" alt="Women's Pants">
+          <div class="promo-content">
+            <h3>Women's Pants</h3>
+            <p>Elegant pants for formal wear</p>
+            <a href="/categories/womens-pants" class="btn btn-primary">Shop Now</a>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <img src="https://images.pexels.com/photos/1457983/pexels-photo-1457983.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Women's Dresses">
+          <div class="promo-content">
+            <h3>Women's Dresses</h3>
+            <p>Beautiful dresses for special events</p>
+            <a href="/categories/womens-dresses" class="btn btn-primary">Shop Now</a>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <img src="https://img.freepik.com/free-photo/woman-posing-with-stylish-footwear-summer-fashion-bag-long-legs-shopping_285396-497.jpg?ga=GA1.1.1278972893.1746628695&semt=ais_hybrid&w=740" alt="Women's Shoes">
+          <div class="promo-content">
+            <h3>Women's Shoes</h3>
+            <p>Stylish shoes for formal occasions</p>
+            <a href="/categories/womens-shoes" class="btn btn-primary">Shop Now</a>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <img src="https://img.freepik.com/free-photo/thoughtful-beautiful-girl-sits-table-with-makeup-tools-holds-eyeshadow-palette-makeup-brush-looking-up-isolated-green-wall_141793-71061.jpg?ga=GA1.1.1278972893.1746628695&semt=ais_hybrid&w=740" alt="Women's Care">
+          <div class="promo-content">
+            <h3>Women's Care</h3>
+            <p>Premium care for formal grooming</p>
+            <a href="/categories/womens-care" class="btn btn-primary">Shop Now</a>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <img src="https://img.freepik.com/free-photo/model-career-kit-still-life_23-2150229758.jpg?ga=GA1.1.1278972893.1746628695&semt=ais_hybrid&w=740" alt="Women's Accessories">
+          <div class="promo-content">
+            <h3>Women's Accessories</h3>
+            <p>Elegant accessories for formal wear</p>
+            <a href="/categories/womens-accessories" class="btn btn-primary">Shop Now</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Carousel Navigation -->
+      <button class="carousel-prev"><</button>
+      <button class="carousel-next">></button>
+
+      <!-- Indicators -->
+      <div class="carousel-indicators">
+        <button class="indicator active" data-slide="0"></button>
+        <button class="indicator" data-slide="1"></button>
+        <button class="indicator" data-slide="2"></button>
+        <button class="indicator" data-slide="3"></button>
+        <button class="indicator" data-slide="4"></button>
+        <button class="indicator" data-slide="5"></button>
+        <button class="indicator" data-slide="6"></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Women CATEGORIES Section -->
+  <section class="category-section">
+    <div class="container">
+      <h2>WOMEN CATEGORIES</h2>
+      <div class="category-container">
+        <!-- Women's Categories -->
+        <h3 class="category-name">Women's Shirts</h3>
+        <div class="category-item">
+          <div class="category-image">
+            <a href="/categories/womens-shirts">
+              <img src="https://img.freepik.com/free-photo/young-lady-pretending-show-something-her-right-side-green-shirt-looking-puzzled-front-view_176474-66915.jpg?ga=GA1.1.1278972893.1746628695&semt=ais_hybrid&w=740" alt="Women's Shirts">
+            </a>
+          </div>
+        </div>
+
+        <h3 class="category-name">Women's T-Shirts</h3>
+        <div class="category-item">
+          <div class="category-image">
+            <a href="/categories/womens-tshirts">
+              <img src="https://img.freepik.com/premium-photo/portrait-positive-cheerful-fashionable-smiling-young-brunette-woman-casual-white-t-shirt-mockup-isolated-blue-background-with-copy-space_88135-28586.jpg?ga=GA1.1.1278972893.1746628695&semt=ais_hybrid&w=740" alt="Women's T-Shirts">
+            </a>
+          </div>
+        </div>
+
+        <h3 class="category-name">Women's Pants</h3>
+        <div class="category-item">
+          <div class="category-image">
+            <a href="/categories/womens-pants">
+              <img src="https://img.freepik.com/free-photo/full-shot-smiley-woman-posing-outdoors_23-2150360988.jpg?ga=GA1.1.1278972893.1746628695&semt=ais_hybrid&w=740" alt="Women's Pants">
+            </a>
+          </div>
+        </div>
+
+        <h3 class="category-name">Women's Dresses</h3>
+        <div class="category-item">
+          <div class="category-image">
+            <a href="/categories/womens-dresses">
+              <img src="https://images.pexels.com/photos/1457983/pexels-photo-1457983.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Women's Dresses">
+            </a>
+          </div>
+        </div>
+
+        <h3 class="category-name">Women's Shoes</h3>
+        <div class="category-item">
+          <div class="category-image">
+            <a href="/categories/womens-shoes">
+              <img src="https://img.freepik.com/free-photo/woman-posing-with-stylish-footwear-summer-fashion-bag-long-legs-shopping_285396-497.jpg?ga=GA1.1.1278972893.1746628695&semt=ais_hybrid&w=740" alt="Women's Shoes">
+            </a>
+          </div>
+        </div>
+
+        <h3 class="category-name">Women's Care</h3>
+        <div class="category-item">
+          <div class="category-image">
+            <a href="/categories/womens-care">
+              <img src="https://img.freepik.com/free-photo/thoughtful-beautiful-girl-sits-table-with-makeup-tools-holds-eyeshadow-palette-makeup-brush-looking-up-isolated-green-wall_141793-71061.jpg?ga=GA1.1.1278972893.1746628695&semt=ais_hybrid&w=740" alt="Women's Care">
+            </a>
+          </div>
+        </div>
+
+        <h3 class="category-name">Women's Accessories</h3>
+        <div class="category-item">
+          <div class="category-image">
+            <a href="/categories/womens-accessories">
+              <img src="https://img.freepik.com/free-photo/model-career-kit-still-life_23-2150229758.jpg?ga=GA1.1.1278972893.1746628695&semt=ais_hybrid&w=740" alt="Women's Accessories">
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<!-- Items on Sale Section -->
+<section class="products">
+  <h2>Items on Sale <a href="/categories/sale-items" class="view-all">View All</a></h2>
+  <% if (saleItems.length > 0) { %>
+    <div class="product-grid">
+      <% saleItems.forEach(product => { %>
+        <div class="product-card">
+          <img src="<%= product.image || '/images/placeholder.jpg' %>" alt="<%= product.name %>">
+          <h3><%= product.name %></h3>
+          <p>
+            <% if (product.discountedPrice) { %>
+              <span class="sale-price">Sale Price: ₹<%= (product.price - product.discountedPrice).toFixed(2) %></span>
+              <span class="original-price">₹<%= product.price.toFixed(2) %></span>
+            <% } else { %>
+              Price: ₹<%= product.price.toFixed(2) %>
+            <% } %>
+          </p>
+          <% if (product.stockDetails && product.stockDetails.length > 0) { %>
+            <% const isOutOfStock = product.stockDetails.every(detail => detail.stock === 0); %>
+            <p class="<%= isOutOfStock ? 'out-of-stock' : '' %>">
+              <%= isOutOfStock ? 'Out of Stock' : 'In Stock' %>
+            </p>
+            <% if (!isOutOfStock) { %>
+              <form action="/cart/add/<%= product._id %>" method="POST">
+                <button type="submit" class="btn">Add to Cart</button>
+              </form>
+            <% } %>
+          <% } else { %>
+            <p class="out-of-stock">Out of Stock</p>
+          <% } %>
+          <a href="/products/<%= product._id %>" class="btn">View Details</a>
+        </div>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <p>No sale items found.</p>
+  <% } %>
+</section>
+
+  <!-- New Section: Features -->
+  <section class="features">
+    <div class="feature">
+      <img src="https://media.istockphoto.com/id/164143276/photo/free-shipping-stamp.jpg?b=1&s=612x612&w=0&k=20&c=5mnIf39RBl2KRYnNT1aSOjSOUx3i3Mc6wsGUdXOjjOU=" alt="Free Shipping">
+      <h3>FREE SHIPPING</h3>
+    </div>
+    <div class="feature">
+      <img src="/css/images/icon-return.png" alt="Return Within 7 Days">
+      <h3>RETURN WITHIN 7 DAYS</h3>
+    </div>
+    <div class="feature">
+      <img src="https://images.pexels.com/photos/5025669/pexels-photo-5025669.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Express Delivery in Store Mode">
+      <h3>EXPRESS DELIVERY IN STORE MODE</h3>
+    </div>
+  </section>
+
+  <%- include('partials/footer') %>
+</body>
+</html>

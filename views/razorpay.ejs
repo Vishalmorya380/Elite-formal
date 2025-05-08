@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Razorpay Payment</title>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const options = {
+        key: '<%- razorpayOptions.key %>',
+        amount: '<%- razorpayOptions.amount %>',
+        currency: '<%- razorpayOptions.currency %>',
+        order_id: '<%- razorpayOptions.order_id %>'
+      };
+
+      options.handler = function(response) {
+        alert('Payment successful!');
+        window.location.href = '/checkout/order-confirmation';
+      };
+
+      options.modal = {
+        escape: false,
+        ondismiss: function() {
+          alert('Payment canceled!');
+        }
+      };
+
+      const rzp = new Razorpay(options);
+      rzp.open();
+    });
+  </script>
+</body>
+</html>

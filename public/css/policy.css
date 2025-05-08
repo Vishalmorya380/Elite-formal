@@ -1,0 +1,103 @@
+/* General Styles */
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f4f7fa;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+h1 {
+  text-align: center;
+  font-size: 36px;
+  color: #4caf50;
+  margin: 40px 0;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 24px;
+  color: #333;
+  margin-top: 30px;
+  border-bottom: 2px solid #4caf50;
+  padding-bottom: 10px;
+}
+
+p {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+ul {
+  margin-left: 20px;
+}
+
+ul li {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+/* Container Styling */
+main {
+  width: 80%;
+  margin: 0 auto;
+  padding: 30px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+section {
+  margin-bottom: 40px;
+}
+
+/* Links */
+a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  font-size: 14px;
+  color: #777;
+  margin-top: 40px;
+}
+
+footer a {
+  color: #4caf50;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  main {
+    width: 90%;
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  p, ul li {
+    font-size: 14px;
+  }
+}

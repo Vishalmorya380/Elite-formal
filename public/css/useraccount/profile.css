@@ -1,0 +1,79 @@
+.profile-information {
+  padding: 20px;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.profile-section {
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.profile-section h2 {
+  margin-top: 0;
+}
+
+.details-section {
+  margin-top: 10px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #45a049;
+}
+
+.alert {
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+.alert.success {
+  background-color: #dff0d8;
+  color: #3c763d;
+}
+
+.alert.error {
+  background-color: #f2dede;
+  color: #a94442;
+}
+
+.order-list, .wishlist-list, .address-list, .payment-list, .notification-list, .return-list {
+  margin-top: 20px;
+}
+
+.order-item, .wishlist-item, .address-item, .payment-item, .notification-item, .return-item {
+  border: 1px solid #eee;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}

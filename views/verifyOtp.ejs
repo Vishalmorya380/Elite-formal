@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verify OTP</title>
+  <link rel="stylesheet" href="/css/otp.css">
+</head>
+<body>
+  <%- include('partials/header') %>
+
+  <div class="auth-form">
+    <h2>Verify OTP</h2>
+    <% if (messages && messages.error) { %>
+      <p class="error"><%= messages.error %></p>
+    <% } %>
+    <form action="/auth/verify-otp" method="POST">
+      <input type="hidden" name="email" value="<%= email %>">
+      <div class="form-group">
+        <label for="otp">OTP</label>
+        <input type="text" name="otp" id="otp" required>
+      </div>
+      <button type="submit" class="btn">Verify</button>
+    </form>
+  </div>
+  <%- include('partials/footer') %>
+</body>
+</html>

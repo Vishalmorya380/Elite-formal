@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Products</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/admin/manageProducts.css">
+</head>
+<body>
+  <%- include('../partials/header', { user: user }) %>
+  <div class="admin-container">
+    <div class="admin-links">
+      <a href="/admin/products">Manage Products</a>
+      <a href="/admin/stock-management">Manage Stock</a>
+      <a href="/admin/users">Manage Users</a>
+      <a href="/admin/orders">Manage Orders</a>
+      <a href="/admin/analytics">View Analytics</a>
+      <a href="/admin/coupons">Manage Coupons</a>
+      <div class="sub-links">
+        <h3>Product Categories</h3>
+        <ul>
+          <li>Men
+            <ul>
+              <li><a href="/admin/products?category=men&subcategory=shirts">Shirts</a></li>
+              <li><a href="/admin/products?category=men&subcategory=tshirts">T-Shirts</a></li>
+              <li><a href="/admin/products?category=men&subcategory=jackets">Jackets</a></li>
+              <li><a href="/admin/products?category=men&subcategory=shoes">Shoes</a></li>
+              <li><a href="/admin/products?category=men&subcategory=care">Care</a></li>
+              <li><a href="/admin/products?category=men&subcategory=accessories">Accessories</a></li>
+              <li><a href="/admin/products?category=men&subcategory=pants">Pants</a></li>
+              <li><a href="/admin/products?category=men&subcategory=suits">Suits</a></li>
+            </ul>
+          </li>
+          <li>Women
+            <ul>
+              <li><a href="/admin/products?category=women&subcategory=shirts">Shirts</a></li>
+              <li><a href="/admin/products?category=women&subcategory=tshirts">T-Shirts</a></li>
+              <li><a href="/admin/products?category=women&subcategory=jackets">Jackets</a></li>
+              <li><a href="/admin/products?category=women&subcategory=pants">Pants</a></li>
+              <li><a href="/admin/products?category=women&subcategory=dresses">Dresses</a></li>
+              <li><a href="/admin/products?category=women&subcategory=shoes">Shoes</a></li>
+              <li><a href="/admin/products?category=women&subcategory=care">Care</a></li>
+              <li><a href="/admin/products?category=women&subcategory=accessories">Accessories</a></li>
+              <li><a href="/admin/products?category=women&subcategory=plazo">Plazo</a></li>
+              <li><a href="/admin/products?category=women&subcategory=kurti">Kurti</a></li>
+            </ul>
+          </li>
+          <li>Kids
+            <ul>
+              <li><a href="/admin/products?category=kids&subcategory=shirts">Shirts</a></li>
+              <li><a href="/admin/products?category=kids&subcategory=tshirts">T-Shirts</a></li>
+              <li><a href="/admin/products?category=kids&subcategory=jackets">Jackets</a></li>
+              <li><a href="/admin/products?category=kids&subcategory=pants">Pants</a></li>
+              <li><a href="/admin/products?category=kids&subcategory=shoes">Shoes</a></li>
+              <li><a href="/admin/products?category=kids&subcategory=accessories">Accessories</a></li>
+            </ul>
+          </li>
+          <li>Special Sections
+            <ul>
+              <li><a href="/admin/products?special=new_arrivals">New Arrivals</a></li>
+              <li><a href="/admin/products?special=sale">Items on Sale</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <h2>Manage Products<% if (category || subcategory || special) { %> - <%= category || '' %> <%= subcategory || '' %> <%= special === 'new_arrivals' ? 'New Arrivals' : special === 'sale' ? 'Items on Sale' : '' %><% } %></h2>
+    <% if (success && success.length > 0) { %><p class="success"><%= success %></p><% } %>
+    <% if (error && error.length > 0) { %><p class="error"><%= error %></p><% } %>
+    <form action="/admin/products/add" method="POST">
+      <h3>Add Product</h3>
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+      </div>
+      <div class="form-group">
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" step="0.01" min="0" required>
+      </div>
+      <div class="form-group">
+        <label for="discountedPrice">Discounted Price (optional, marks as "Items on Sale"):</label>
+        <input type="number" id="discountedPrice" name="discountedPrice" step="0.01" min="0">
+      </div>
+      <div class="form-group">
+        <label for="category">Category:</label>
+        <select id="category" name="category" required onchange="updateSubcategoryAndSizes()">
+          <option value="men">Men</option>
+          <option value="women">Women</option>
+          <option value="kids">Kids</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="subcategory">Subcategory:</label>
+        <select id="subcategory" name="subcategory" required onchange="updateSizes()">
+          <optgroup label="Men/Women/Kids">
+            <option value="shirts">Shirts</option>
+            <option value="tshirts">T-Shirts</option>
+            <option value="jackets">Jackets</option>
+            <option value="pants">Pants</option>
+            <option value="shoes">Shoes</option>
+            <option value="accessories">Accessories</option>
+            <option value="care">Care</option>
+          </optgroup>
+          <optgroup label="Women Specific">
+            <option value="plazo">Plazo</option>
+            <option value="kurti">Kurti</option>
+            <option value="dresses">Dresses</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="color">Color:</label>
+        <input type="text" id="color" name="color" required>
+      </div>
+      <div class="form-group">
+        <label for="image">Image URL:</label>
+        <input type="text" id="image" name="image" required>
+      </div>
+      <div class="form-group">
+        <label for="size">Size:</label>
+        <select id="size" name="size">
+          <option value="">None</option>
+          <!-- Options will be populated dynamically via JavaScript -->
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="stock">Total Stock:</label>
+        <input type="number" id="stock" name="stock" min="0" required>
+      </div>
+      <div class="form-group stock-details">
+        <label>Stock Details (optional):</label>
+        <div id="stock-details-container">
+          <div class="stock-detail">
+            <input type="text" name="stockDetails[0][color]" placeholder="Color">
+            <input type="text" name="stockDetails[0][size]" placeholder="Size">
+            <input type="number" name="stockDetails[0][stock]" placeholder="Stock" min="0">
+          </div>
+        </div>
+        <button type="button" id="add-stock-detail">Add More Stock Detail</button>
+      </div>
+      <button type="submit" class="btn">Add Product</button>
+    </form>
+  
+    <h3>Existing Products</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Price</th>
+          <th>Discounted Price</th>
+          <th>Category</th>
+          <th>Subcategory</th>
+          <th>Color</th>
+          <th>Size</th>
+          <th>Image</th>
+          <th>Total Stock</th>
+          <th>Stock Details</th>
+          <th>Created At</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% products.forEach(product => { %>
+          <tr>
+            <td><%= product.name %></td>
+            <td><%= product.description %></td>
+            <td>₹<%= product.price.toFixed(2) %></td>
+            <td><%= product.discountedPrice ? `₹${product.discountedPrice.toFixed(2)}` : '-' %></td>
+            <td><%= product.category %></td>
+            <td><%= product.subcategory %></td>
+            <td><%= product.color %></td>
+            <td><%= product.size || '-' %></td>
+            <td><img src="<%= product.image %>" alt="<%= product.name %>" width="50"></td>
+            <td><%= product.stock %></td>
+            <td>
+              <% if (product.stockDetails.length > 0) { %>
+                <ul>
+                  <% product.stockDetails.forEach(detail => { %>
+                    <li><%= detail.color %> / <%= detail.size || '-' %>: <%= detail.stock %></li>
+                  <% }) %>
+                </ul>
+              <% } else { %>
+                -
+              <% } %>
+            </td>
+            <td><%= new Date(product.createdAt).toLocaleDateString() %></td>
+            <td>
+              <a href="/admin/products/edit/<%= product._id %>" class="btn">Edit</a>
+              <form action="/admin/products/delete/<%= product._id %>" method="POST" style="display:inline;">
+                <button type="submit" class="btn">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <%- include('../partials/footer', { user: user }) %>
+  <script>
+    // Add more stock details
+    document.getElementById('add-stock-detail').addEventListener('click', () => {
+      const container = document.getElementById('stock-details-container');
+      const index = container.children.length;
+      const newDetail = document.createElement('div');
+      newDetail.className = 'stock-detail';
+      newDetail.innerHTML = `
+        <input type="text" name="stockDetails[${index}][color]" placeholder="Color">
+        <input type="text" name="stockDetails[${index}][size]" placeholder="Size">
+        <input type="number" name="stockDetails[${index}][stock]" placeholder="Stock" min="0">
+      `;
+      container.appendChild(newDetail);
+    });
+
+    // Define upper and lower body subcategories
+    const upperBodySubcategories = ['shirts', 'tshirts', 'jackets', 'kurti', 'dresses', 'suits'];
+    const lowerBodySubcategories = ['pants', 'plazo'];
+
+    // Update subcategory options based on category
+    function updateSubcategoryAndSizes() {
+      const category = document.getElementById('category').value;
+      const subcategorySelect = document.getElementById('subcategory');
+      const sizeSelect = document.getElementById('size');
+
+      // Reset subcategory options
+      subcategorySelect.innerHTML = `
+        <optgroup label="Men/Women/Kids">
+          <option value="shirts">Shirts</option>
+          <option value="tshirts">T-Shirts</option>
+          <option value="jackets">Jackets</option>
+          <option value="pants">Pants</option>
+          <option value="shoes">Shoes</option>
+          <option value="accessories">Accessories</option>
+          <option value="care">Care</option>
+        </optgroup>
+        <optgroup label="Women Specific">
+          <option value="plazo">Plazo</option>
+          <option value="kurti">Kurti</option>
+          <option value="dresses">Dresses</option>
+        </optgroup>
+      `;
+
+      // Filter subcategories based on category
+      subcategorySelect.disabled = false;
+      sizeSelect.disabled = false;
+      if (category !== 'women') {
+        const womenSpecificGroup = subcategorySelect.querySelector('optgroup[label="Women Specific"]');
+        womenSpecificGroup.style.display = 'none';
+        Array.from(womenSpecificGroup.children).forEach(option => option.disabled = true);
+      } else {
+        const womenSpecificGroup = subcategorySelect.querySelector('optgroup[label="Women Specific"]');
+        womenSpecificGroup.style.display = 'block';
+        Array.from(womenSpecificGroup.children).forEach(option => option.disabled = false);
+      }
+
+      // Update sizes based on the default subcategory
+      updateSizes();
+    }
+
+    // Update size options based on subcategory
+    function updateSizes() {
+      const category = document.getElementById('category').value;
+      const subcategory = document.getElementById('subcategory').value;
+      const sizeSelect = document.getElementById('size');
+
+      // Clear existing options
+      sizeSelect.innerHTML = '<option value="">None</option>';
+
+      // Determine if the subcategory is upper body, lower body, or shoes
+      if (upperBodySubcategories.includes(subcategory)) {
+        // Upper body: Use alphabetical sizes
+        const alphaSizes = ['S', 'M', 'L', 'XL', 'XXL'];
+        alphaSizes.forEach(size => {
+          const option = document.createElement('option');
+          option.value = size;
+          option.text = size;
+          sizeSelect.appendChild(option);
+        });
+        sizeSelect.disabled = false;
+      } else if (lowerBodySubcategories.includes(subcategory)) {
+        // Lower body: Use numeric sizes for pants or plazo
+        if (category === 'men') {
+          const menSizes = [28, 30, 32, 34, 36, 38, 40, 42, 44, 48];
+          menSizes.forEach(size => {
+            const option = document.createElement('option');
+            option.value = size.toString();
+            option.text = size.toString();
+            sizeSelect.appendChild(option);
+          });
+        } else if (category === 'women') {
+          const womenSizes = [26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 48];
+          womenSizes.forEach(size => {
+            const option = document.createElement('option');
+            option.value = size.toString();
+            option.text = size.toString();
+            sizeSelect.appendChild(option);
+          });
+        } else if (category === 'kids') {
+          const kidsSizes = [26, 28, 30, 32, 34];
+          kidsSizes.forEach(size => {
+            const option = document.createElement('option');
+            option.value = size.toString();
+            option.text = size.toString();
+            sizeSelect.appendChild(option);
+          });
+        }
+        sizeSelect.disabled = false;
+      } else if (subcategory === 'shoes') {
+        // Shoes: Different sizes based on category (Men, Women, Kids)
+        if (category === 'kids') {
+          const kidsOptGroup = document.createElement('optgroup');
+          kidsOptGroup.label = 'Kids Sizes (UK)';
+          for (let size = 1; size <= 8; size++) {
+            const option = document.createElement('option');
+            option.value = `UK ${size}`;
+            option.text = `UK ${size}`;
+            kidsOptGroup.appendChild(option);
+          }
+          sizeSelect.appendChild(kidsOptGroup);
+        } else if (category === 'men') {
+          const menOptGroup = document.createElement('optgroup');
+          menOptGroup.label = 'Men Sizes (UK)';
+          for (let size = 5; size <= 11; size++) {
+            const option = document.createElement('option');
+            option.value = `UK ${size}`;
+            option.text = `UK ${size}`;
+            menOptGroup.appendChild(option);
+          }
+          sizeSelect.appendChild(menOptGroup);
+        } else if (category === 'women') {
+          const womenOptGroup = document.createElement('optgroup');
+          womenOptGroup.label = 'Women Sizes (UK)';
+          for (let size = 4; size <= 10; size++) {
+            const option = document.createElement('option');
+            option.value = `UK ${size}`;
+            option.text = `UK ${size}`;
+            womenOptGroup.appendChild(option);
+          }
+          sizeSelect.appendChild(womenOptGroup);
+        }
+        sizeSelect.disabled = false;
+      } else {
+        // Other subcategories (e.g., accessories, care): Disable size
+        sizeSelect.disabled = true;
+      }
+    }
+
+    // Initialize sizes on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      updateSubcategoryAndSizes();
+    });
+  </script>
+</body>
+</html>

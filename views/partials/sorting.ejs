@@ -1,0 +1,21 @@
+<div class="sort-section">
+  <form id="sortForm" action="/<%= routeName === 'search' ? 'search' : 'categories/' + routeName %>" method="GET">
+    <% if (routeName === 'search') { %>
+      <input type="hidden" name="query" value="<%= searchQuery %>">
+    <% } %>
+    <!-- Preserve existing filters -->
+    <% for (let key in currentFilters) { %>
+      <% if (key !== 'sort') { %>
+        <input type="hidden" name="<%= key %>" value="<%= currentFilters[key] %>">
+      <% } %>
+    <% } %>
+    <label for="sort">Sort By:</label>
+    <select name="sort" id="sort" onchange="this.form.submit()">
+      <option value="" <%= !currentFilters.sort ? 'selected' : '' %>>None</option>
+      <option value="newest" <%= currentFilters.sort === 'newest' ? 'selected' : '' %>>Newest</option>
+      <option value="price-low-to-high" <%= currentFilters.sort === 'price-low-to-high' ? 'selected' : '' %>>Price: Low to High</option>
+      <option value="price-high-to-low" <%= currentFilters.sort === 'price-high-to-low' ? 'selected' : '' %>>Price: High to Low</option>
+      <!-- <option value="discount" <%= currentFilters.sort === 'discount' ? 'selected' : '' %>>Discount</option> -->
+    </select>
+  </form>
+</div>
